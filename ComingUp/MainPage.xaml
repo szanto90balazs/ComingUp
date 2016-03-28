@@ -5,19 +5,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-	DataContext="{Binding AppViewModel, RelativeSource={RelativeSource Mode=Self}}">
+	DataContext="{Binding ViewModel, RelativeSource={RelativeSource Mode=Self}}">
 
 	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="RootGrid">
 		<Grid.RowDefinitions>
-			<RowDefinition />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<AutoSuggestBox Grid.Row="0"
+		<AutoSuggestBox Name="MediaSuggestionsBox" Grid.Row="0"
 						Width="{Binding ElementName=RootGrid, Path=Width}"
 						Text="{Binding SearchTerm, Mode=TwoWay}"
 						PlaceholderText="I would like to watch ..."
 						ItemsSource="{Binding SearchResults}"
 						ItemTemplate="{StaticResource AutoSuggestBoxDataTemplate}" />
+
+		<FlipView Grid.Row="1" />
 	</Grid>
 </Page>

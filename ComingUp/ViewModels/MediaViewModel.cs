@@ -4,7 +4,7 @@ using System.Reactive.Linq;
 
 namespace ComingUp.ViewModels
 {
-	public class ShowViewModel : ReactiveObject
+	public class MediaViewModel : ReactiveObject
 	{
 		private Show show;
 
@@ -14,14 +14,14 @@ namespace ComingUp.ViewModels
 			set { this.RaiseAndSetIfChanged(ref show, value); }
 		}
 
-		private ObservableAsPropertyHelper<string> backdrop;
+		private readonly ObservableAsPropertyHelper<string> backdrop;
 		public string Backdrop => backdrop.Value;
 
-		private ObservableAsPropertyHelper<string> name;
+		private readonly ObservableAsPropertyHelper<string> name;
 
 		public string Name => name.Value;
 
-		public ShowViewModel()
+		public MediaViewModel()
 		{
 			backdrop = this.WhenAnyValue(p => p.Show).
 				Where(show => show != null).

@@ -1,35 +1,38 @@
-﻿using ReactiveUI;
+﻿using ComingUp.Utils;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.TMDb;
+using System.Diagnostics;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ComingUp.ViewModels
 {
 	public class AppViewModel : ReactiveObject
 	{
+		private readonly TmdbApi tmdbApi;
+
 		private string searchTerm;
 
 		public string SearchTerm
 		{
 			get { return searchTerm; }
-			set
-			{
-				this.RaiseAndSetIfChanged(ref searchTerm, value);
-			}
+			set { this.RaiseAndSetIfChanged(ref searchTerm, value); }
 		}
 
-		public ReactiveCommand<IEnumerable<ShowViewModel>> ExecuteSearch { get; protected set; }
+		public ReactiveCommand<MediaViewModel> SuggestionChosen { get; set; }
+		public ReactiveCommand<IEnumerable<MediaViewModel>> ExecuteSearch { get; protected set; }
 
-		private ObservableAsPropertyHelper<IEnumerable<ShowViewModel>> searchResults;
-		public IEnumerable<ShowViewModel> SearchResults => searchResults.Value;
+		private readonly ObservableAsPropertyHelper<IEnumerable<MediaViewModel>> searchResults;
+		public IEnumerable<MediaViewModel> SearchResults => searchResults.Value;
+
+		private IReactiveDerivedList<MediaViewModel> SavedMedia { get; }
 
 		public AppViewModel()
 		{
-			ExecuteSearch = ReactiveCommand.CreateAsyncTask(async param => await GetMovies(SearchTerm));
+			tmdbApi = new TmdbApi();
+
+			ExecuteSearch = ReactiveCommand.CreateAsyncTask(async param => await tmdbApi.GetMovies(SearchTerm));
 			this.WhenAnyValue(x => x.SearchTerm).
 				Throttle(TimeSpan.FromMilliseconds(800), RxApp.MainThreadScheduler).
 				Select(x => x?.Trim()).
@@ -37,20 +40,11 @@ namespace ComingUp.ViewModels
 				Where(x => !string.IsNullOrWhiteSpace(x)).
 				InvokeCommand(ExecuteSearch);
 
-			searchResults = ExecuteSearch.ToProperty(this, x => x.SearchResults, new List<ShowViewModel>());
-		}
+			searchResults = ExecuteSearch.ToProperty(this, x => x.SearchResults, new List<MediaViewModel>());
 
-		private async Task<IEnumerable<ShowViewModel>> GetMovies(string currentSearchTerm)
-		{
-			var cancellationToken = new CancellationToken();
-			using (var tmdbClient = new ServiceClient("40f2479d476c7f5ae3758bd88b296a7f"))
-			{
-				var shows = await tmdbClient.Shows.SearchAsync(currentSearchTerm, "en", null, 1, cancellationToken);
-				return shows.Results.Select(p => new ShowViewModel
-				{
-					Show = p
-				});
-			}
+			SuggestionChosen = ReactiveCommand.CreateAsyncTask(x => Task.FromResult(x as MediaViewModel));
+			SavedMedia = SuggestionChosen.CreateCollection();
+			SavedMedia.CountChanged.Subscribe(count => Debug.WriteLine($"Count change => {count}"));
 		}
 	}
 }
