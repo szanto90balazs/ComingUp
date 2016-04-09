@@ -1,0 +1,9 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ComingUp.Templates">
+
+	<DataTemplate x:Key="SavedMediaFlipViewDataTemplate">
+		<Image Source="{Binding Backdrop}" Stretch="UniformToFill" />
+	</DataTemplate>
+</ResourceDictionary>

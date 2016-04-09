@@ -26,7 +26,7 @@ namespace ComingUp.ViewModels
 		private readonly ObservableAsPropertyHelper<IEnumerable<MediaViewModel>> searchResults;
 		public IEnumerable<MediaViewModel> SearchResults => searchResults.Value;
 
-		private IReactiveDerivedList<MediaViewModel> SavedMedia { get; }
+		public IReactiveDerivedList<MediaViewModel> SavedMedia { get; }
 
 		public AppViewModel()
 		{
@@ -44,7 +44,6 @@ namespace ComingUp.ViewModels
 
 			SuggestionChosen = ReactiveCommand.CreateAsyncTask(x => Task.FromResult(x as MediaViewModel));
 			SavedMedia = SuggestionChosen.CreateCollection();
-			SavedMedia.CountChanged.Subscribe(count => Debug.WriteLine($"Count change => {count}"));
 		}
 	}
 }

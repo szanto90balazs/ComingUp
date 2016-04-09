@@ -20,6 +20,7 @@
 						ItemsSource="{Binding SearchResults}"
 						ItemTemplate="{StaticResource AutoSuggestBoxDataTemplate}" />
 
-		<FlipView Grid.Row="1" />
+		<FlipView Grid.Row="1" ItemsSource="{Binding SavedMedia}"
+				  ItemTemplate="{StaticResource SavedMediaFlipViewDataTemplate}" />
 	</Grid>
 </Page>
