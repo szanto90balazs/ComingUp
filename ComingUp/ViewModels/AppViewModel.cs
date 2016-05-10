@@ -1,8 +1,9 @@
-﻿using ComingUp.Utils;
+﻿using Akavache;
+using ComingUp.Utils;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -44,6 +45,12 @@ namespace ComingUp.ViewModels
 
 			SuggestionChosen = ReactiveCommand.CreateAsyncTask(x => Task.FromResult(x as MediaViewModel));
 			SavedMedia = SuggestionChosen.CreateCollection();
+			SavedMedia.ItemsAdded.Subscribe(async newlySavedMedia =>
+			{
+				await BlobCache.LocalMachine.InsertObject(newlySavedMedia.Show.Id.ToString(), newlySavedMedia);
+			});
+
+			var allKeys = BlobCache.LocalMachine.GetAllKeys().Wait();
 		}
 	}
 }
