@@ -4,10 +4,12 @@
     xmlns:local="using:ComingUp.Styles">
 
 	<ControlTemplate x:Key="SplitViewButton" TargetType="CheckBox">
-		<Button Content="{TemplateBinding Content}"
-				FontFamily="{TemplateBinding FontFamily}"
-				Background="{TemplateBinding Background}"
-				Height="{TemplateBinding Height}" />
+		<Border Margin="10,10,10,0">
+			<ContentPresenter Content="{TemplateBinding Content}"
+						  FontFamily="{TemplateBinding FontFamily}"
+						  Background="{TemplateBinding Background}"
+						  Height="{TemplateBinding Height}" />
+		</Border>
 	</ControlTemplate>
 
 	<Style x:Key="SplitViewButtonBaseStyle" TargetType="CheckBox">

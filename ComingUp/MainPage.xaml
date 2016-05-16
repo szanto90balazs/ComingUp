@@ -63,7 +63,10 @@
 				Height="{Binding ActualHeight, ElementName=MediaSuggestionsBox}"
 				Style="{StaticResource HamburgerButtonStyle}" />
 
-		<SplitView Name="SplitView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" CompactPaneLength="{Binding ActualWidth, ElementName=HamburgerButton}" OpenPaneLength="300" IsPaneOpen="True">
+		<SplitView Name="SplitView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+				   CompactPaneLength="{Binding ActualWidth, ElementName=HamburgerButton}"
+				   OpenPaneLength="300"
+				   IsPaneOpen="{Binding IsChecked, ElementName=HamburgerButton, Mode=TwoWay}">
 			<SplitView.Pane>
 				<StackPanel Orientation="Vertical">
 					<CheckBox x:Name="Favourites"
