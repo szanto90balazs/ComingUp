@@ -8,19 +8,79 @@
 	DataContext="{Binding ViewModel, RelativeSource={RelativeSource Mode=Self}}">
 
 	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="RootGrid">
+		<!--Have the Visual state group in a separate resource-->
+		<!-- Adaptive triggers -->
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<VisualState>
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="SplitView.DisplayMode" Value="CompactInline" />
+						<Setter Target="SplitView.IsPaneOpen" Value="True" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState>
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="SplitView.DisplayMode" Value="CompactOverlay" />
+						<Setter Target="SplitView.IsPaneOpen" Value="False" />
+					</VisualState.Setters>
+				</VisualState>
+				<VisualState>
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="SplitView.DisplayMode" Value="Overlay" />
+						<Setter Target="SplitView.IsPaneOpen" Value="False" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<AutoSuggestBox Name="MediaSuggestionsBox" Grid.Row="0"
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<AutoSuggestBox Name="MediaSuggestionsBox" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
 						Width="{Binding ElementName=RootGrid, Path=Width}"
 						Text="{Binding SearchTerm, Mode=TwoWay}"
 						PlaceholderText="I would like to watch ..."
 						ItemsSource="{Binding SearchResults}"
 						ItemTemplate="{StaticResource AutoSuggestBoxDataTemplate}" />
 
-		<FlipView Grid.Row="1" ItemsSource="{Binding SavedMedia}"
-				  ItemTemplate="{StaticResource SavedMediaFlipViewDataTemplate}" />
+		<CheckBox x:Name="HamburgerButton"
+				Height="{Binding ActualHeight, ElementName=MediaSuggestionsBox}"
+				Style="{StaticResource HamburgerButtonStyle}" />
+
+		<SplitView Name="SplitView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" CompactPaneLength="{Binding ActualWidth, ElementName=HamburgerButton}" OpenPaneLength="300" IsPaneOpen="True">
+			<SplitView.Pane>
+				<StackPanel Orientation="Vertical">
+					<CheckBox x:Name="Favourites"
+							  Style="{StaticResource FavouritesButtonStyle}"
+							  Height="{Binding ActualHeight, ElementName=MediaSuggestionsBox}" />
+
+					<CheckBox x:Name="Calendar"
+							  Style="{StaticResource CalendarButtonStyle}"
+							  Height="{Binding ActualHeight, ElementName=MediaSuggestionsBox}" />
+				</StackPanel>
+			</SplitView.Pane>
+
+			<SplitView.Content>
+				<FlipView Grid.Row="1"
+						  ItemsSource="{Binding SavedMedia}"
+						  ItemTemplate="{StaticResource SavedMediaFlipViewDataTemplate}" />
+			</SplitView.Content>
+		</SplitView>
 	</Grid>
 </Page>

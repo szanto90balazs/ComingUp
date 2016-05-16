@@ -3,7 +3,6 @@ using ComingUp.Utils;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -44,6 +43,7 @@ namespace ComingUp.ViewModels
 			searchResults = ExecuteSearch.ToProperty(this, x => x.SearchResults, new List<MediaViewModel>());
 
 			SuggestionChosen = ReactiveCommand.CreateAsyncTask(x => Task.FromResult(x as MediaViewModel));
+
 			SavedMedia = SuggestionChosen.CreateCollection();
 			SavedMedia.ItemsAdded.Subscribe(async newlySavedMedia =>
 			{

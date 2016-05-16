@@ -6,8 +6,13 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<!--Templates-->
 				<ResourceDictionary Source="Templates/AutoSuggestBoxTemplate.xaml" />
 				<ResourceDictionary Source="Templates/SavedMediaFlipViewDataTemplate.xaml" />
+
+				<!--Styles-->
+				<ResourceDictionary Source="Styles/DefaultStyles.xaml" />
+				<ResourceDictionary Source="Styles/SplitViewStyles.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>
